@@ -69,7 +69,7 @@ type Props = {
   searchParams: { [key: string]: string | string[] | undefined };
 };
 
-export default function AnamnesisViewPage({ params }: Props) {
+export default function AnamnesisViewPage({ params }: { params: { id: string }}) {
   const { id } = params;
   const supabase = createClient();
   const [formData, setFormData] = useState<AnamnesisForm | null>(null);

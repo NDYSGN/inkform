@@ -44,7 +44,7 @@ export class GoogleCalendarService {
     try {
       const response = await this.calendar.events.insert({
         calendarId: 'primary',
-        resource: event,
+        requestBody: event,
       });
       return response.data;
     } catch (error) {
@@ -58,7 +58,7 @@ export class GoogleCalendarService {
       const response = await this.calendar.events.update({
         calendarId: 'primary',
         eventId,
-        resource: event,
+        requestBody: event,
       });
       return response.data;
     } catch (error) {
