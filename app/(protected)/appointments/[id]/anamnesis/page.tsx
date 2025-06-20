@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, use } from 'react';
 import { createClient } from '@/lib/supabase';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -30,11 +30,45 @@ const AnamnesisDisplay = ({ question, answer, details }: AnamnesisDisplayProps) 
   </div>
 );
 
-export default function AnamnesisViewPage({ params }: { params: Promise<{ id: string }> }) {
-  const { id } = use(params);
+type Appointment = {
+  client_name: string;
+  appointment_date: string;
+};
+
+type AnamnesisForm = {
+  is_pregnant: boolean;
+  has_consumed_alcohol_or_drugs: boolean;
+  has_allergies: boolean;
+  allergies_details?: string;
+  has_been_tattooed_before: boolean;
+  tattooed_area_details?: string;
+  is_undergoing_heavy_treatment: boolean;
+  is_allergic_to_iodine: boolean;
+  has_history_of_infection: boolean;
+  has_active_skin_disease: boolean;
+  has_autoimmune_disease: boolean;
+  has_immunodeficiency_disease: boolean;
+  takes_anticoagulants_or_has_cardiovascular_issues: boolean;
+  has_pacemaker: boolean;
+  has_epilepsy: boolean;
+  has_diabetes: boolean;
+  has_herpes: boolean;
+  has_asthma: boolean;
+  has_conjunctivitis: boolean;
+  is_on_accutane_treatment: boolean;
+  has_taken_aspirin_or_anti_inflammatories: boolean;
+  has_wound_healing_issues: boolean;
+  place?: string;
+  signature_date: string;
+  client_signature?: string;
+  practitioner_signature?: string;
+};
+
+export default function AnamnesisViewPage({ params }: { params: { id: string } }) {
+  const { id } = params;
   const supabase = createClient();
-  const [formData, setFormData] = useState(null);
-  const [appointment, setAppointment] = useState(null);
+  const [formData, setFormData] = useState<AnamnesisForm | null>(null);
+  const [appointment, setAppointment] = useState<Appointment | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   
