@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef, use } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase';
 import { Button } from '@/components/ui/button';
@@ -8,9 +8,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
 import SignatureCanvas from 'react-signature-canvas';
-import { Switch } from '@/components/ui/switch';
 
 // Helper component for each question
 const AnamnesisQuestion = ({ question, value, onValueChange, details, onDetailsChange, detailsLabel }) => (

@@ -46,44 +46,44 @@ export default function DocumentsPage() {
   const [dateFilter, setDateFilter] = useState('all');
 
   useEffect(() => {
-    fetchDocuments();
-  }, []);
+    async function fetchDocuments() {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        const { data: studio } = await supabase
+          .from('studios')
+          .select('id')
+          .eq('user_id', user.id)
+          .single();
 
-  async function fetchDocuments() {
-    const { data: { user } } = await supabase.auth.getUser();
-    if (user) {
-      const { data: studio } = await supabase
-        .from('studios')
-        .select('id')
-        .eq('user_id', user.id)
-        .single();
+        if (studio) {
+          const { data: formData, error: formError } = await supabase
+            .from('anamnesis_forms')
+            .select(`
+              id,
+              appointment_id,
+              signature_date,
+              place,
+              appointment:appointments (
+                client_name,
+                appointment_date,
+                description
+              )
+            `)
+            .eq('appointment.studio_id', studio.id)
+            .order('signature_date', { ascending: false });
 
-      if (studio) {
-        const { data: formData, error: formError } = await supabase
-          .from('anamnesis_forms')
-          .select(`
-            id,
-            appointment_id,
-            signature_date,
-            place,
-            appointment:appointments (
-              client_name,
-              appointment_date,
-              description
-            )
-          `)
-          .eq('appointment.studio_id', studio.id)
-          .order('signature_date', { ascending: false });
-
-        if (formError) {
-          setError('Failed to load documents: ' + formError.message);
-        } else {
-          setDocuments(formData || []);
+          if (formError) {
+            setError('Failed to load documents: ' + formError.message);
+          } else {
+            setDocuments(formData || []);
+          }
         }
       }
+      setLoading(false);
     }
-    setLoading(false);
-  }
+
+    fetchDocuments();
+  }, [supabase]);
 
   const filteredDocuments = documents.filter(doc => {
     const matchesSearch = doc.appointment.client_name.toLowerCase().includes(searchTerm.toLowerCase()) ||

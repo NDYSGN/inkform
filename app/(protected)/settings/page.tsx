@@ -34,26 +34,26 @@ export default function SettingsPage() {
   const [success, setSuccess] = useState('');
 
   useEffect(() => {
-    fetchSettings();
-  }, []);
+    async function fetchSettings() {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        const { data: studio, error } = await supabase
+          .from('studios')
+          .select('*')
+          .eq('user_id', user.id)
+          .single();
 
-  async function fetchSettings() {
-    const { data: { user } } = await supabase.auth.getUser();
-    if (user) {
-      const { data: studio, error } = await supabase
-        .from('studios')
-        .select('*')
-        .eq('user_id', user.id)
-        .single();
-
-      if (error) {
-        setError('Failed to load settings: ' + error.message);
-      } else {
-        setSettings(studio);
+        if (error) {
+          setError('Failed to load settings: ' + error.message);
+        } else {
+          setSettings(studio);
+        }
       }
+      setLoading(false);
     }
-    setLoading(false);
-  }
+
+    fetchSettings();
+  }, [supabase]);
 
   const handleSave = async () => {
     if (!settings) return;
