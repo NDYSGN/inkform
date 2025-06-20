@@ -1,33 +1,40 @@
-import { google, Auth, calendar_v3 } from 'googleapis';
+import { google } from 'googleapis';
 
-export class CalendarService {
-  private calendar: calendar_v3.Calendar;
-  private auth: Auth.OAuth2Client;
+export interface CalendarEvent {
+  id?: string;
+  summary: string;
+  description?: string;
+  start: {
+    dateTime: string;
+    timeZone: string;
+  };
+  end: {
+    dateTime: string;
+    timeZone: string;
+  };
+  attendees?: Array<{ email: string }>;
+  reminders?: {
+    useDefault: boolean;
+    overrides?: Array<{
+      method: 'email' | 'popup';
+      minutes: number;
+    }>;
+  };
+}
 
-  constructor(credentials: string | object) {
-    if (typeof credentials === 'string') {
-        credentials = JSON.parse(credentials);
-    }
-    
-    const creds = credentials as {
-        client_id: string;
-        client_secret: string;
-        redirect_uris: string[];
-        tokens: any;
-    }
+export class GoogleCalendarService {
+  private auth: unknown;
+  private calendar: unknown;
 
-    this.auth = new Auth.OAuth2Client(
-        creds.client_id,
-        creds.client_secret,
-        creds.redirect_uris[0]
-    );
-
-    this.auth.setCredentials(creds.tokens);
-
+  constructor(credentials: unknown) {
+    this.auth = new google.auth.GoogleAuth({
+      credentials,
+      scopes: ['https://www.googleapis.com/auth/calendar'],
+    });
     this.calendar = google.calendar({ version: 'v3', auth: this.auth });
   }
 
-  async createEvent(event: calendar_v3.Params$Resource$Events$Insert['requestBody']) {
+  async createEvent(event: CalendarEvent) {
     try {
       const response = await this.calendar.events.insert({
         calendarId: 'primary',
@@ -40,11 +47,11 @@ export class CalendarService {
     }
   }
 
-  async updateEvent(eventId: string, event: calendar_v3.Params$Resource$Events$Update['requestBody']) {
+  async updateEvent(eventId: string, event: CalendarEvent) {
     try {
       const response = await this.calendar.events.update({
         calendarId: 'primary',
-        eventId: eventId,
+        eventId,
         resource: event,
       });
       return response.data;
@@ -58,7 +65,7 @@ export class CalendarService {
     try {
       await this.calendar.events.delete({
         calendarId: 'primary',
-        eventId: eventId,
+        eventId,
       });
     } catch (error) {
       console.error('Error deleting calendar event:', error);
@@ -66,19 +73,59 @@ export class CalendarService {
     }
   }
 
-  async getEvents() {
+  async listEvents(timeMin: string, timeMax: string) {
     try {
       const response = await this.calendar.events.list({
         calendarId: 'primary',
-        timeMin: new Date().toISOString(),
-        maxResults: 10,
+        timeMin,
+        timeMax,
         singleEvents: true,
         orderBy: 'startTime',
       });
       return response.data.items;
     } catch (error) {
-      console.error('Error fetching calendar events:', error);
+      console.error('Error listing calendar events:', error);
       throw error;
     }
   }
+}
+
+// Helper function to create appointment event
+export function createAppointmentEvent(
+  clientName: string,
+  appointmentDate: Date,
+  description: string,
+  price?: number,
+  deposit?: number
+): CalendarEvent {
+  const startTime = new Date(appointmentDate);
+  const endTime = new Date(appointmentDate);
+  endTime.setHours(endTime.getHours() + 2); // Default 2-hour appointment
+
+  const eventDescription = [
+    `Client: ${clientName}`,
+    `Description: ${description}`,
+    ...(price ? [`Total Price: €${price.toFixed(2)}`] : []),
+    ...(deposit ? [`Deposit: €${deposit.toFixed(2)}`] : []),
+  ].join('\n');
+
+  return {
+    summary: `Tattoo Appointment - ${clientName}`,
+    description: eventDescription,
+    start: {
+      dateTime: startTime.toISOString(),
+      timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+    },
+    end: {
+      dateTime: endTime.toISOString(),
+      timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+    },
+    reminders: {
+      useDefault: false,
+      overrides: [
+        { method: 'email', minutes: 24 * 60 }, // 24 hours before
+        { method: 'popup', minutes: 60 }, // 1 hour before
+      ],
+    },
+  };
 } 
