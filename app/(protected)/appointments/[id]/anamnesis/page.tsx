@@ -64,7 +64,12 @@ type AnamnesisForm = {
   practitioner_signature?: string;
 };
 
-export default function AnamnesisViewPage({ params }: { params: { id: string } }) {
+type Props = {
+  params: { id: string };
+  searchParams: { [key: string]: string | string[] | undefined };
+};
+
+export default function AnamnesisViewPage({ params }: Props) {
   const { id } = params;
   const supabase = createClient();
   const [formData, setFormData] = useState<AnamnesisForm | null>(null);
