@@ -47,7 +47,7 @@ export default function DocumentsPage() {
 
   useEffect(() => {
     fetchDocuments();
-  }, [fetchDocuments]);
+  }, []);
 
   async function fetchDocuments() {
     const { data: { user } } = await supabase.auth.getUser();

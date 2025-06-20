@@ -35,7 +35,7 @@ export default function SettingsPage() {
 
   useEffect(() => {
     fetchSettings();
-  }, [fetchSettings]);
+  }, []);
 
   async function fetchSettings() {
     const { data: { user } } = await supabase.auth.getUser();
