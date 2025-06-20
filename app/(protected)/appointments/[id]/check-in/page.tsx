@@ -10,8 +10,17 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Input } from '@/components/ui/input';
 import SignatureCanvas from 'react-signature-canvas';
 
+interface AnamnesisQuestionProps {
+  question: string;
+  value: string;
+  onValueChange: (value: string) => void;
+  details?: string;
+  onDetailsChange?: (value: string) => void;
+  detailsLabel?: string;
+}
+
 // Helper component for each question
-const AnamnesisQuestion = ({ question, value, onValueChange, details, onDetailsChange, detailsLabel }) => (
+const AnamnesisQuestion = ({ question, value, onValueChange, details, onDetailsChange, detailsLabel }: AnamnesisQuestionProps) => (
   <div className="space-y-3 rounded-lg border p-3 lg:p-4">
     <Label className="text-sm lg:text-base">{question}</Label>
     <RadioGroup
@@ -35,7 +44,7 @@ const AnamnesisQuestion = ({ question, value, onValueChange, details, onDetailsC
         <Input
           id={question + '-details'}
           value={details}
-          onChange={(e) => onDetailsChange(e.target.value)}
+          onChange={(e) => onDetailsChange?.(e.target.value)}
           placeholder="Please specify..."
           className="mt-1"
         />
@@ -49,7 +58,7 @@ export default function CheckInPage({ params }: { params: { id: string } }) {
   const { id } = params;
   const supabase = createClient();
   const router = useRouter();
-  const [appointment, setAppointment] = useState(null);
+  const [appointment, setAppointment] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [formState, setFormState] = useState({
     is_pregnant: '',
@@ -77,8 +86,8 @@ export default function CheckInPage({ params }: { params: { id: string } }) {
     place: '',
   });
 
-  const clientSigRef = useRef(null);
-  const practitionerSigRef = useRef(null);
+  const clientSigRef = useRef<SignatureCanvas>(null);
+  const practitionerSigRef = useRef<SignatureCanvas>(null);
   const [error, setError] = useState('');
 
   useEffect(() => {
@@ -99,13 +108,13 @@ export default function CheckInPage({ params }: { params: { id: string } }) {
     fetchAppointment();
   }, [id, supabase]);
 
-  const handleFormChange = (field, value) => {
+  const handleFormChange = (field: keyof typeof formState, value: string) => {
     setFormState(prev => ({ ...prev, [field]: value }));
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (clientSigRef.current.isEmpty() || practitionerSigRef.current.isEmpty()) {
+    if (clientSigRef.current?.isEmpty() || practitionerSigRef.current?.isEmpty()) {
       setError('Both client and practitioner signatures are required.');
       return;
     }
@@ -113,7 +122,7 @@ export default function CheckInPage({ params }: { params: { id: string } }) {
     setLoading(true);
     setError('');
 
-    const formDataForDb = Object.entries(formState).reduce((acc, [key, value]) => {
+    const formDataForDb = Object.entries(formState).reduce((acc: {[key: string]: string | boolean | null}, [key, value]) => {
       if(value === 'yes' || value === 'no') {
         acc[key] = value === 'yes';
       } else {
@@ -126,8 +135,8 @@ export default function CheckInPage({ params }: { params: { id: string } }) {
       appointment_id: id,
       ...formDataForDb,
       signature_date: new Date().toISOString(),
-      client_signature: clientSigRef.current.toDataURL(),
-      practitioner_signature: practitionerSigRef.current.toDataURL(),
+      client_signature: clientSigRef.current?.toDataURL(),
+      practitioner_signature: practitionerSigRef.current?.toDataURL(),
     });
 
     if (insertError) {
@@ -193,14 +202,14 @@ export default function CheckInPage({ params }: { params: { id: string } }) {
                   <div className="mt-1 border rounded-md">
                     <SignatureCanvas ref={clientSigRef} canvasProps={{ className: 'w-full h-24 lg:h-32' }} />
                   </div>
-                  <Button type="button" variant="outline" size="sm" className="mt-2" onClick={() => clientSigRef.current.clear()}>Clear</Button>
+                  <Button type="button" variant="outline" size="sm" className="mt-2" onClick={() => clientSigRef.current?.clear()}>Clear</Button>
                </div>
                <div>
                   <Label className="text-sm lg:text-base">Practitioner Signature (&quot;Read and approved&quot;)</Label>
                   <div className="mt-1 border rounded-md">
                     <SignatureCanvas ref={practitionerSigRef} canvasProps={{ className: 'w-full h-24 lg:h-32' }} />
                   </div>
-                  <Button type="button" variant="outline" size="sm" className="mt-2" onClick={() => practitionerSigRef.current.clear()}>Clear</Button>
+                  <Button type="button" variant="outline" size="sm" className="mt-2" onClick={() => practitionerSigRef.current?.clear()}>Clear</Button>
                </div>
             </div>
              <div className="space-y-2">

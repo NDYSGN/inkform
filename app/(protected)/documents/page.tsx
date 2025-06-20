@@ -75,7 +75,7 @@ export default function DocumentsPage() {
           if (formError) {
             setError('Failed to load documents: ' + formError.message);
           } else {
-            setDocuments(formData || []);
+            setDocuments((formData as any) || []);
           }
         }
       }

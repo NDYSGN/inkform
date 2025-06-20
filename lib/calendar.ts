@@ -1,4 +1,5 @@
-import { google } from 'googleapis';
+import { google, calendar_v3 } from 'googleapis';
+import { GoogleAuth } from 'google-auth-library';
 
 export interface CalendarEvent {
   id?: string;
@@ -22,11 +23,16 @@ export interface CalendarEvent {
   };
 }
 
-export class GoogleCalendarService {
-  private auth: unknown;
-  private calendar: unknown;
+interface ServiceAccountCredentials {
+  client_email?: string;
+  private_key?: string;
+}
 
-  constructor(credentials: unknown) {
+export class GoogleCalendarService {
+  private auth: GoogleAuth;
+  private calendar: calendar_v3.Calendar;
+
+  constructor(credentials: ServiceAccountCredentials) {
     this.auth = new google.auth.GoogleAuth({
       credentials,
       scopes: ['https://www.googleapis.com/auth/calendar'],

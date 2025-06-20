@@ -14,10 +14,16 @@ interface Appointment {
   appointment_date: string;
   price: number | null;
   deposit: number | null;
-  payment_status: 'paid' | 'deposit_paid' | 'pending';
+  payment_status: 'paid' | 'deposit_paid' | 'pending' | 'fully_paid';
 }
 
-const StatCard = ({ title, value, icon }) => (
+interface StatCardProps {
+  title: string;
+  value: number;
+  icon: React.ReactNode;
+}
+
+const StatCard = ({ title, value, icon }: StatCardProps) => (
   <Card>
     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
       <CardTitle className="text-sm font-medium">{title}</CardTitle>
@@ -99,8 +105,10 @@ export default function FinancePage() {
         return <Badge variant="default" className="bg-green-100 text-green-800">Paid</Badge>;
       case 'deposit_paid':
         return <Badge variant="secondary">Deposit Paid</Badge>;
-      default:
+      case 'pending':
         return <Badge variant="outline">Pending</Badge>;
+      default:
+        return <Badge variant="outline">{status}</Badge>;
     }
   };
 
