@@ -70,7 +70,7 @@ export default function DashboardPage() {
           <CardHeader>
             <CardTitle>Welcome to InkForm!</CardTitle>
             <CardDescription>
-              You haven't set up your studio yet. Get started by creating one.
+              You haven&apos;t set up your studio yet. Get started by creating one.
             </CardDescription>
           </CardHeader>
           <CardContent>

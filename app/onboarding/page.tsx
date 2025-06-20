@@ -42,8 +42,8 @@ export default function OnboardingPage() {
       } else {
         router.push('/dashboard');
       }
-    } catch (err) {
-      setError('An unexpected error occurred');
+    } catch {
+      setError('Failed to create studio.');
     } finally {
       setLoading(false);
     }
@@ -53,7 +53,7 @@ export default function OnboardingPage() {
     <main className="min-h-screen flex items-center justify-center bg-gray-50">
       <Card className="w-full max-w-md">
         <CardHeader>
-          <CardTitle>Welcome! Let's set up your studio.</CardTitle>
+          <CardTitle>Welcome! Let&apos;s set up your studio.</CardTitle>
           <CardDescription>
             Please provide some information about your tattoo studio.
           </CardDescription>

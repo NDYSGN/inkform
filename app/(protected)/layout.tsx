@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { createClient } from '@/lib/supabase';
-import { redirect, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import {
   LayoutDashboard,
@@ -16,7 +16,6 @@ import {
 import { Button } from '@/components/ui/button';
 import { useEffect } from 'react';
 import { User } from '@supabase/supabase-js';
-import { Badge } from '@/components/ui/badge';
 
 const navLinks = [
   { href: '/dashboard', icon: LayoutDashboard, label: 'Dashboard' },

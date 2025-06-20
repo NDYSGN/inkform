@@ -8,7 +8,7 @@ import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
-import { Bell, Calendar, Mail, Save } from 'lucide-react';
+import { Calendar, Mail, Save } from 'lucide-react';
 
 interface StudioSettings {
   id: string;
@@ -35,7 +35,7 @@ export default function SettingsPage() {
 
   useEffect(() => {
     fetchSettings();
-  }, []);
+  }, [fetchSettings]);
 
   async function fetchSettings() {
     const { data: { user } } = await supabase.auth.getUser();
@@ -87,7 +87,7 @@ export default function SettingsPage() {
     setSaving(false);
   };
 
-  const updateSetting = (field: keyof StudioSettings, value: any) => {
+  const updateSetting = (field: keyof StudioSettings, value: unknown) => {
     if (settings) {
       setSettings({ ...settings, [field]: value });
     }

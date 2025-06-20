@@ -118,19 +118,6 @@ export default function AppointmentsPage() {
     }
   };
 
-  const getPaymentStatusColor = (status: string) => {
-    switch (status) {
-      case 'fully_paid':
-        return 'text-green-600';
-      case 'deposit_paid':
-        return 'text-blue-600';
-      case 'cancelled':
-        return 'text-red-600';
-      default:
-        return 'text-gray-600';
-    }
-  };
-
   if (loading) {
     return (
       <div className="flex items-center justify-center h-full">

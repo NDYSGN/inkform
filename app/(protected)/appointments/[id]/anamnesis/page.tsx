@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef, use } from 'react';
+import { useState, useEffect } from 'react';
 import { createClient } from '@/lib/supabase';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -159,13 +159,13 @@ export default function AnamnesisViewPage({ params }: { params: Promise<{ id: st
 
                 <div className="space-y-4 lg:space-y-6 pt-4 lg:pt-6">
                    <div>
-                      <Label className="text-sm lg:text-base">Client Signature ("Read and approved")</Label>
+                      <Label className="text-sm lg:text-base">Client Signature (&quot;Read and approved&quot;)</Label>
                       <div className="mt-1 border rounded-md bg-gray-50">
                         {formData.client_signature && <Image src={formData.client_signature} alt="Client Signature" width={400} height={150} className="w-full h-auto" />}
                       </div>
                    </div>
                    <div>
-                      <Label className="text-sm lg:text-base">Practitioner Signature ("Read and approved")</Label>
+                      <Label className="text-sm lg:text-base">Practitioner Signature (&quot;Read and approved&quot;)</Label>
                       <div className="mt-1 border rounded-md bg-gray-50">
                         {formData.practitioner_signature && <Image src={formData.practitioner_signature} alt="Practitioner Signature" width={400} height={150} className="w-full h-auto" />}
                       </div>

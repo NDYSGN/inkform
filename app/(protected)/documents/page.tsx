@@ -22,7 +22,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Search, FileText, Calendar, User } from 'lucide-react';
 
 interface FormDocument {
@@ -47,7 +47,7 @@ export default function DocumentsPage() {
 
   useEffect(() => {
     fetchDocuments();
-  }, []);
+  }, [fetchDocuments]);
 
   async function fetchDocuments() {
     const { data: { user } } = await supabase.auth.getUser();

@@ -191,14 +191,14 @@ export default function CheckInPage({ params }: { params: Promise<{ id: string }
 
             <div className="space-y-4 lg:space-y-6 pt-4 lg:pt-6">
                <div>
-                  <Label className="text-sm lg:text-base">Client Signature ("Read and approved")</Label>
+                  <Label className="text-sm lg:text-base">Client Signature (&quot;Read and approved&quot;)</Label>
                   <div className="mt-1 border rounded-md">
                     <SignatureCanvas ref={clientSigRef} canvasProps={{ className: 'w-full h-24 lg:h-32' }} />
                   </div>
                   <Button type="button" variant="outline" size="sm" className="mt-2" onClick={() => clientSigRef.current.clear()}>Clear</Button>
                </div>
                <div>
-                  <Label className="text-sm lg:text-base">Practitioner Signature ("Read and approved")</Label>
+                  <Label className="text-sm lg:text-base">Practitioner Signature (&quot;Read and approved&quot;)</Label>
                   <div className="mt-1 border rounded-md">
                     <SignatureCanvas ref={practitionerSigRef} canvasProps={{ className: 'w-full h-24 lg:h-32' }} />
                   </div>

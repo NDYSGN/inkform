@@ -23,10 +23,10 @@ export interface CalendarEvent {
 }
 
 export class GoogleCalendarService {
-  private auth: any;
-  private calendar: any;
+  private auth: unknown;
+  private calendar: unknown;
 
-  constructor(credentials: any) {
+  constructor(credentials: unknown) {
     this.auth = new google.auth.GoogleAuth({
       credentials,
       scopes: ['https://www.googleapis.com/auth/calendar'],
