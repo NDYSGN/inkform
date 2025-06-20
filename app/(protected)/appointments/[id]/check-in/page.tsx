@@ -1,0 +1,3 @@
+export default function CheckInPage({ params }: { params: { id: string } }) {
+  // ... existing code ...
+} 
