@@ -47,8 +47,8 @@ const AnamnesisQuestion = ({ question, value, onValueChange, details, onDetailsC
 );
 
 
-export default function CheckInPage({ params }: { params: Promise<{ id: string }> }) {
-  const { id } = use(params);
+export default function CheckInPage({ params }: { params: { id: string } }) {
+  const { id } = params;
   const supabase = createClient();
   const router = useRouter();
   const [appointment, setAppointment] = useState(null);
